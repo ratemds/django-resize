@@ -13,7 +13,7 @@ setup(
     author='Aron Jones',
     author_email='aron.jones@gmail.com',
     packages=find_packages(),
-    version='0.1.1',
+    version='1.0.1',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
