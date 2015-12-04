@@ -168,12 +168,13 @@ def resize_image(img_file, size=100, storage=default_storage):
 
         # EXIF Orientation tag, see
         # http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/EXIF.html
-        if 0x0112 in exif:
-            if exif[orientation] == 3:
+        exif_orientation_code = 0x0112
+        if exif_orientation_code in exif:
+            if exif[exif_orientation_code] == 3:
                 img = img.rotate(180, Image.BICUBIC, True)
-            elif exif[orientation] == 6:
+            elif exif[exif_orientation_code] == 6:
                 img = img.rotate(270, Image.BICUBIC, True)
-            elif exif[orientation] == 8:
+            elif exif[exif_orientation_code] == 8:
                 img = img.rotate(90, Image.BICUBIC, True)
 
         current_size = [float(x) for x in img.size]
