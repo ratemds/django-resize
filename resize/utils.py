@@ -189,10 +189,10 @@ def resize_image(img_file, size=100, storage=default_storage):
         target_size[1] = target_size[1] or img.size[1]
 
         # transparent
-        # bg = Image.new('RGBA', target_size)
-        # bg.putalpha(Image.new('L', target_size, color=0))
+        bg = Image.new('RGBA', target_size)
+        bg.putalpha(Image.new('L', target_size, color=0))
 
-        bg = Image.new('RGB', target_size, color=(255, 255, 255))
+        # bg = Image.new('RGB', target_size, color=(255, 255, 255))
         box = (int((target_size[0] - int(img.size[0])) / 2),
                int((target_size[1] - int(img.size[1])) / 2))
         bg.paste(img, box)
