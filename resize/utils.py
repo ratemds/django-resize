@@ -12,7 +12,7 @@ from django.core.files.storage import default_storage
 from django.core.files.images import ImageFile
 from django.utils import six
 
-from PIL import Image, ExifTags
+from PIL import Image
 
 logger = logging.getLogger(__name__)
 
@@ -166,11 +166,9 @@ def resize_image(img_file, size=100, storage=default_storage):
 
         exif = get_exif(img)
 
-        for orientation in ExifTags.TAGS.keys():
-            if ExifTags.TAGS[orientation] == 'Orientation':
-                break
-
-        if orientation in exif:
+        # EXIF Orientation tag, see
+        # http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/EXIF.html
+        if 0x0112 in exif:
             if exif[orientation] == 3:
                 img = img.rotate(180, Image.BICUBIC, True)
             elif exif[orientation] == 6:
@@ -188,17 +186,22 @@ def resize_image(img_file, size=100, storage=default_storage):
         target_size[0] = target_size[0] or img.size[0]
         target_size[1] = target_size[1] or img.size[1]
 
-        # transparent
-        bg = Image.new('RGBA', target_size)
-        bg.putalpha(Image.new('L', target_size, color=0))
-
-        # bg = Image.new('RGB', target_size, color=(255, 255, 255))
         box = (int((target_size[0] - int(img.size[0])) / 2),
                int((target_size[1] - int(img.size[1])) / 2))
-        bg.paste(img, box)
+
+        bg = Image.new('RGB', target_size, color=(255, 255, 255))
+        
+        # Checks if the image has alpha (transparency) values. If so, strip the alpha layer 
+        if img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info):
+            alpha = img.convert('RGBA').split()[-1]
+            bg.paste(img, box, mask=alpha)
+        else:
+            bg.paste(img, box)
+
         img = bg
 
-        if img.mode != 'RGB': img = img.convert('RGB')
+        if img.mode != 'RGB':
+            img = img.convert('RGB')
 
         if storage is None:
             thumb_dir = '/'.join(thumb_filename.split('/')[:-1])
