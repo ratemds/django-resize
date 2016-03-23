@@ -26,7 +26,7 @@ register = Library()
 
 
 @register.filter
-@lib.global_function
+@library.global_function
 def resize(img_file, size=100):
     try:
         return resize_image(img_file, size)
