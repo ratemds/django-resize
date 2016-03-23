@@ -12,14 +12,13 @@ from resize.utils import resize_image
 
 try:
     from django_jinja import library
-    lib = library.Library()
 
 except ImportError:
     class LibraryStub(object):
         @staticmethod
         def global_function(func):
             return func
-    lib = LibraryStub()
+    library = LibraryStub()
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +36,7 @@ def resize(img_file, size=100):
 
 
 @register.filter
-@lib.global_function
+@library.global_function
 def resize_static(img_path, size=100):
     try:
         return static(resize_image(
