@@ -21,7 +21,7 @@ def get_file_path(img_file):
     if isinstance(img_file, six.string_types):
         return img_file
     if hasattr(img_file, 'path'):
-        return img_file.path
+        return img_file.name
     elif img_file is not None:
         return img_file.name
 
