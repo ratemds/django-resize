@@ -13,7 +13,6 @@ from django.core.files.images import ImageFile
 from django.utils import six
 
 from PIL import Image
-import pathlib
 
 logger = logging.getLogger(__name__)
 
