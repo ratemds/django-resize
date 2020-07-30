@@ -13,6 +13,7 @@ from django.core.files.images import ImageFile
 from django.utils import six
 
 from PIL import Image
+import pathlib
 
 logger = logging.getLogger(__name__)
 
@@ -20,8 +21,8 @@ logger = logging.getLogger(__name__)
 def get_file_path(img_file):
     if isinstance(img_file, six.string_types):
         return img_file
-    if hasattr(img_file, 'path'):
-        return os.path.dirname(img_file)
+    if pathlib.Path(img_file).exists():
+        return img_file.path
     elif img_file is not None:
         return img_file.name
 
