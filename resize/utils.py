@@ -21,10 +21,11 @@ logger = logging.getLogger(__name__)
 def get_file_path(img_file):
     if isinstance(img_file, six.string_types):
         return img_file
-    if pathlib.Path(img_file.path).exists():
-        return img_file.path
-    elif img_file is not None:
-        return img_file.name
+    else:
+        try:
+            return img_file.path
+        except:
+            return img_file.name
 
 
 def get_thumb_name(img_file, size):
